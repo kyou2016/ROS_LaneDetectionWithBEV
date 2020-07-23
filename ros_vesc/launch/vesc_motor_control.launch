@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+    <include file="$(find vesc_driver)/launch/vesc_driver_node.launch" />
+    <include file="$(find rplidar_ros)/launch/rplidar.launch" />
+
+    <node pkg="ros_vesc" type="vesc_motor_control.py" name="motor_controller" output="screen" />
+</launch>

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+	<!-- Load RPLidar Node launch -->
+	<include file="$(find rplidar_ros)/launch/rplidar.launch" />
+
+	<!-- Subscriber Node -->	
+	<node name="DIST" pkg ="rplidar_ros" type="rplidar_data.py" output="screen"/>
+
+	<!-- Visualization rqt_graph-->
+	<!-- <node name="rqt_graph" pkg="rqt_graph" type="rqt_graph" /> -->
+</launch>

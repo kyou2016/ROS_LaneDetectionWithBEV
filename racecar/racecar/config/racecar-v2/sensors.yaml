@@ -1,0 +1,6 @@
+
+laser_node:
+  device: /dev/ttyUSB0
+
+imu_node:
+  device: /dev/imu

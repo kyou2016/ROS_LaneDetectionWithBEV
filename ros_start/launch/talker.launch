@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- Publisher node -->
+    <node pkg="ros_start" type="talker.py" name="kunsan" output="screen"/>
+
+    <!-- Subscriber node -->
+    <node pkg="ros_start" type="listener.py" name="taemin" output="screen"/>
+
+    <!-- Visualisation with rqt -->
+    <node pkg="rqt_graph" type="rqt_graph" name="rqt_graph"/>
+
+</launch>

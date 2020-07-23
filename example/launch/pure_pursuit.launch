@@ -1,0 +1,7 @@
+<launch>
+    <node name="kinematics" pkg="example" type="kinematics_with_imu.py"/>
+    <node name="load_path" pkg="example" type="load_path.py"/>
+    <node name="pure_pursuit" pkg="example" type="pure_pursuit.py" output="screen"/>
+
+    <node name="rviz" pkg="rviz" type="rviz"/>
+</launch>

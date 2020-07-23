@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<launch>
+	<!-- Load RPLidar Node Launch -->
+	<include file="$(find rplidar_ros)/launch/rplidar.launch"/>
+	<!-- Subscriber Node -->
+	<node name="Check_Dist_Node" pkg="rplidar_ros" type="rplidar_data.py" output="screen"/>
+	<!-- Visualization rviz -->
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find rplidar_ros)/rviz/rplidar.rviz"/>
+
+	<!-- Load usb_cam Launch -->
+	<include file="$(find usb_cam)/launch/usb_cam-test.launch"/>
+</launch>

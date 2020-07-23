@@ -1,0 +1,3 @@
+find . -name '.git'
+
+find . -mindepth 2 -name '.git' -prune -exec rm -rf {} +
