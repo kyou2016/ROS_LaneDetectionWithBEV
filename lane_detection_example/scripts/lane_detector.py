@@ -8,23 +8,22 @@ import numpy as np
 import json
 
 from sensor_msgs.msg import CompressedImage
-from cv_bridge import CvBridgeError
 
 from utils import BEVTransform, CURVEFit, draw_lane_img
 
 class LINEDetector:
 
     def __init__(self):
-        self.image_sub = rospy.Subscriber('/image_jpeg/compressed', CompressedImage, self.image_Callback)
         self.img_lane = None
+	self.cam = None
+	self.set_cam(1)
 
-    def image_Callback(self, msg):
+    def set_cam(self, _index):
+	self.cam = cv2.VideoCapture(int(_index))
+
+    def get_image_from_cam(self):
+        ret, img_bgr = cv2.cam.read()
         
-        try:
-            np_arr = np.array(np.fromstring(msg.data, np.uint8))
-            img_bgr = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
-        except CvBridgeError as e:
-            print(e)
         
         img_hsv = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2HSV)
 
@@ -33,6 +32,8 @@ class LINEDetector:
         lower_lane = np.array([ 0,   0, 250])
 
         self.img_lane = cv2.inRange(img_hsv, lower_lane, upper_lane)
+	
+	return self.img_lane
         # self.img_lane = cv2.cvtColor(self.img_lane, cv2.COLOR_GRAY2BGR)
 
 
@@ -52,20 +53,24 @@ if __name__ == '__main__':
     # WeCar의 카메라 이미지를 Bird Eye View 이미지로 변환하기 위한 클래스를 선언
     bev_trans = BEVTransform(params_cam=params_cam)
     # BEV로 변환된 이미지에서 추출한 포인트를 기반으로 RANSAC을 이용하여 차선을 예측하는 클래스를 선언
-    pts_learner = CURVEFit(order=1)
+    pts_learner = CURVEFit(order=3)
 
     lane_detector = LINEDetector()
 
     rate = rospy.Rate(20)
+    img_wlane = None
 
     while not rospy.is_shutdown():
 
-        if lane_detector.img_lane is not None:
+	if lane_detector.cam is not None:
+	    img_wlane = lane_detector.get_image_from_cam()
+
+        if img_wlane is not None:
 
             # 카메라 이미지를 BEV이미지로 변환
-            img_bev = bev_trans.warp_bev_img(lane_detector.img_lane)
+            img_bev = bev_trans.warp_bev_img(img_wlane)
             # 카메라 이미지에서 차선에 해당하는 포인트들을 추출
-            lane_pts = bev_trans.recon_lane_pts(lane_detector.img_lane)
+            lane_pts = bev_trans.recon_lane_pts(img_wlane)
 
             # 추출한 포인트를 기반으로 차선을 예측
             x_pred, y_pred_l, y_pred_r = pts_learner.fit_curve(lane_pts)
