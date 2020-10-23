@@ -1,0 +1,8 @@
+<!-- -*- mode: XML -*- -->
+<launch>
+  <include file="$(find racecar)/launch/teleop.launch">
+  </include>
+
+   <node name="keyboard_control" pkg="racecar" type="keyboard_control.py" output="screen" >
+   </node>
+</launch>

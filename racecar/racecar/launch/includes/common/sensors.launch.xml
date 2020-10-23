@@ -1,0 +1,15 @@
+<!-- -*- mode: XML -*- -->
+<launch>
+  <arg name="racecar_version" />
+  <arg name="sensors_config"
+       default="$(find racecar)/config/$(arg racecar_version)/sensors.yaml" />
+
+  <rosparam file="$(arg sensors_config)" command="load" />
+
+  <!-- laser -->
+  <include file="$(find rplidar_ros)/launch/rplidar.launch" />
+
+  <!-- imu -->
+  <include file="$(find razor_imu_9dof)/launch/razor-pub.launch" />
+
+</launch>

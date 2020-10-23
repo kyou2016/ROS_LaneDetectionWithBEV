@@ -1,0 +1,16 @@
+{
+    "params_cam":
+    {
+        "ENGINE":"LOGITECH",
+        "TYPE":"JPG",
+        "WIDTH":640,
+        "HEIGHT":480,
+        "FOV":72,
+        "X":0.20,
+        "Y":0,
+        "Z":0.20,
+        "YAW":0,
+        "PITCH":5.0,
+        "ROLL":0
+    }
+}

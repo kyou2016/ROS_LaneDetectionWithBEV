@@ -1,0 +1,5 @@
+<launch>
+
+    <node pkg="lane_detection_example" type="hanho_lane_detector.py" name="lane_detector" />
+
+</launch>

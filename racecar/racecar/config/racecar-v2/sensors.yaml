@@ -1,0 +1,6 @@
+
+laser_node:
+  device: /dev/ttyRplidar
+
+imu_node:
+  device: /dev/ttyImu
