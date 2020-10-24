@@ -2,6 +2,6 @@
     
     <node pkg="lane_detection_example" type="lane_detector.py" name="lane_detector" />
     <node pkg="lane_detection_example" type="stopline_detector.py" name="stopline_detector" />
-    <node pkg="lane_detection_example" type="traffic_detector.py" name="traffic_detector" output="screen" />
-
+    <node pkg="lane_detection_example" type="traffic_detector.py" name="traffic_detector" />
+    <node pkg="lane_detection_example" type="controller.py" name="controller" output="screen" />
 </launch>

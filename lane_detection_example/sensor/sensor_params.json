@@ -1,7 +1,7 @@
 {
     "params_cam":
     {
-        "ENGINE": "UNITY" ,
+        "ENGINE": "MICROSOFT" ,
         "TYPE": "JPG" ,
         "WIDTH": 640 ,
         "HEIGHT": 480 ,

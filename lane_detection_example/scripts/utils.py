@@ -82,8 +82,8 @@ def projectionMtx(params_cam):
         fc_x = params_cam["HEIGHT"]/(2*np.tan(np.deg2rad(params_cam["FOV"]/2)))
         fc_y = params_cam["HEIGHT"]/(2*np.tan(np.deg2rad(params_cam["FOV"]/2)))
     else:
-        fc_x = params_cam["WIDTH"]/2(2*np.tan(np.deg2rad(params_cam["FOV"]/2)))
-        fc_y = params_cam["WIDTH"]/2(2*np.tan(np.deg2rad(params_cam["FOV"]/2)))
+        fc_x = params_cam["WIDTH"]/2*(2*np.tan(np.deg2rad(params_cam["FOV"]/2)))
+        fc_y = params_cam["WIDTH"]/2*(2*np.tan(np.deg2rad(params_cam["FOV"]/2)))
 
     cx = params_cam['WIDTH']/2
     cy = params_cam["HEIGHT"]/2
@@ -279,14 +279,12 @@ class CURVEFit:
         self.lane_path = Path()
 
         self.ransac_left = linear_model.RANSACRegressor(base_estimator=linear_model.Ridge(alpha=2),
-                                                        max_trials=5, 
-                                                        loss='absolute_loss',
+                                                        max_trials=5,
                                                         min_samples=self.min_pts, 
                                                         residual_threshold=0.4)
         
         self.ransac_right = linear_model.RANSACRegressor(base_estimator=linear_model.Ridge(alpha=2),
                                                         max_trials=5, 
-                                                        loss='absolute_loss',
                                                         min_samples=self.min_pts, 
                                                         residual_threshold=0.4)
 
@@ -417,7 +415,28 @@ class purePursuit:
 
         self.lpath = msg
 
-    def steering_angle(self):    
+    def steering_angle_lane(self, x_pred, y_pred_l, y_pred_r):
+	y_pred = -0.5 * (y_pred_l + y_pred_r)
+
+	dis_pts = np.sqrt(np.square(x_pred) + np.square(y_pred))
+	
+	for i, pts in enumerate(dis_pts):
+
+	    if pts >= self.lfd:
+		self.is_look_forward_point = True
+		break
+
+	theta = math.atan2(y_pred[i], x_pred[i])
+	if self.is_look_forward_point:
+            steering_deg = math.atan2((2*self.vehicle_length*math.sin(theta)), self.lfd)*180/math.pi
+
+	    self.steering = np.clip(steering_deg, -17, 17)/34+0.5
+	    print(self.steering)
+	else:
+	    self.steering = 0.5304
+	    print("No found forward point")
+
+    def steering_angle(self):
 
         self.is_look_forward_point = False
 
@@ -432,15 +451,15 @@ class purePursuit:
                 if dis_pts >= self.lfd:
 
                     self.is_look_forward_point = True
-                    break                   
-        
+                    break
+
         theta = math.atan2(path_point.y, path_point.x)
 
         if self.is_look_forward_point:
             steering_deg = math.atan2((2*self.vehicle_length*math.sin(theta)), self.lfd)*180/math.pi
 
-            self.steering = np.clip(steering_deg, -22, 22)/44+0.5
-            # print(self.steering)            
+            self.steering = np.clip(steering_deg, -17, 17)/34+0.5
+            print(self.steering)
         else:
             self.steering = 0.5304
             print("No found forward point")

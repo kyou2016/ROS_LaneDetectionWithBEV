@@ -21,10 +21,13 @@ class LINEDetector:
     def set_cam(self, _index):
 	self.cam = cv2.VideoCapture(int(_index))
 
-    def get_image_from_cam(self):
-        ret, img_bgr = cv2.cam.read()
-        
-        
+    def get_cam_image(self):
+	ret, img = self.cam.read()
+	return ret, img
+
+    def binary_image(self):
+        ret, img_bgr = self.get_cam_image()
+
         img_hsv = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2HSV)
 
         # 주황색 차선, 흰색 차선 모두 검출되는 값 -> 실제 사용시 다른 값이 검출될 수 있음
@@ -63,7 +66,7 @@ if __name__ == '__main__':
     while not rospy.is_shutdown():
 
 	if lane_detector.cam is not None:
-	    img_wlane = lane_detector.get_image_from_cam()
+	    img_wlane = lane_detector.binary_image()
 
         if img_wlane is not None:
 
